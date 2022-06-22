@@ -95,34 +95,26 @@ db.query(sql, params, (err, result) => {
 });
 
 // Update a candidate's party
-app.put('/api/candidate/:id', (req, res) => {
-    const sql = `UPDATE candidates SET party_id =?
+router.put('/api/candidate/:id', (req, res) => {
+    const sql = `UPDATE candidates SET party_id = ? 
                  WHERE id = ?`;
-
-
-const errors = inputCheck(req.body, 'party_id');
-if (errors) {
-    res.status(400).json({ error: errors});
-    return;
-}
-
-const params = [req.body.party_id, req.params.id];
-db.query(sql, params, (err, result) => {
-    if(err) {
+    const params = [req.body.party_id, req.params.id];
+    db.query(sql, params, (err, result) => {
+      if (err) {
         res.status(400).json({ error: err.message });
-        //check if a record was found
-    } else if (!result.affectedRows) {
+        // check if a record was found
+      } else if (!result.affectedRows) {
         res.json({
-            message: 'Candidate not found'
+          message: 'Candidate not found'
         });
-    } else {
+      } else {
         res.json({
-            message: 'success',
-            data: req.body,
-            changes: result.affectedRows
+          message: 'success',
+          data: req.body,
+          changes: result.affectedRows
         });
-    }
+      }
+    });
   });
-});
 
 module.exports = router;
